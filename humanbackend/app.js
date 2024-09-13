@@ -10,9 +10,10 @@ dotenv.config();
 // Import Routes
 
 const authRoutes = require("./routes/auth");
-// const healthRoutes = require('./routes/health');
-// const educationRoutes = require('./routes/education');
-// const mentalHealthRoutes = require('./routes/mentalHealth');
+const healthRoutes = require('./routes/health.js');
+
+const educationRoutes = require('./routes/education.js');
+const financeRoutes = require('./routes/finance.js');
 
 // Initialize Express
 const app = express();
@@ -34,9 +35,9 @@ app.get('/',(req, res)=>{
 })
 
 app.use("/api/auth", authRoutes);
-// app.use('/api/health', healthRoutes);
-// app.use('/api/education', educationRoutes);
-// app.use('/api/mentalHealth', mentalHealthRoutes);
+app.use('/api/health', healthRoutes);
+app.use('/api/education', educationRoutes);
+app.use('/api/finance', financeRoutes);
 
 // Start Server
 
