@@ -34,10 +34,11 @@ const handleUserSignup = async (req, res, next) => {
       expires,
       httpOnly: true,
       signed: true,
+      
     });
     return res
       .status(201)
-      .json({ message: "OK", name: user.name, email: user.email });
+      .json({ message: "OK", name: user.name, email: user.email ,token: token});
   } catch (err) {
     return res.status(500).json({ error: "error", cause: err.message });
   }
