@@ -8,7 +8,7 @@ mongoose.set('strictQuery', true);
 async function connectToMongoDB(url) {
   try {
     await mongoose.connect(url);
-    console.log('MongoDB connected successfully to eliteCare database!');
+    console.log('MongoDB connected successfully to Human database!');
   } catch (err) {
     console.error('Failed to connect to MongoDB', err.message);
     process.exit(1);
