@@ -41,7 +41,7 @@ app.use("/api/auth", authRoutes);
 // Start Server
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 2000;
 
 connectToMongoDB("mongodb://127.0.0.1:27017/human")
 .then(()=>{
