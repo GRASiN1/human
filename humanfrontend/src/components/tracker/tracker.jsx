@@ -4,14 +4,11 @@ import Navbar from "../navbar/navbar";
 import Loader from "../loader/loader";
 
 export default function Tracker(props) {
-  // State to control which section is visible
   const [isGoalVisible, setIsGoalVisible] = useState(true);
-
-  // State to store fetched data and the current item index
+  const [goal, setGoal] = useState(""); // State to store the new goal
   const [data, setData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Fetch data from the backend when the component loads
   useEffect(() => {
     async function fetchData() {
       try {
@@ -25,25 +22,66 @@ export default function Tracker(props) {
     fetchData();
   }, []);
 
+  async function handleCreate() {
+    if (!goal.trim()) {
+      alert("Goal cannot be empty");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost/api/roadmap/goals", { // Replace with your endpoint
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem('token')}`, // Include token if required
+        },
+        body: JSON.stringify({ goal })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Goal created successfully!");
+        setGoal(""); // Clear input field
+        // Optionally, refetch or update your state to reflect the new goal
+        setData(prevData => [...prevData, result]);
+      } else {
+        alert(`Error: ${result.message}`);
+      }
+    } catch (error) {
+      console.error("Error creating goal:", error);
+      alert("Something went wrong. Please try again later.");
+    }
+  }
+
   function handleSetGoals() {
     setIsGoalVisible(true);
   }
 
-  // Show the RoadMap and hide the Set Goals form
   function handleRoadMap() {
     setIsGoalVisible(false);
   }
 
-  // Logic for "checking" the current item and loading the next one
   function handleCheck() {
-    if (currentIndex < data.length - 1) {
-      setCurrentIndex(currentIndex + 1); // Move to the next item
+    if (data.length > 0 && currentIndex < data.length) {
+      // Mark the current task as completed
+      try {
+        const task = data[currentIndex];
+        fetch(`http://localhost/api/roadmap/${task.id}/complete`, { // Adjust endpoint as necessary
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+        });
+        setCurrentIndex(currentIndex + 1);
+      } catch (error) {
+        console.error("Error marking task as completed:", error);
+      }
     } else {
-      alert("No more items to load!"); // Or you could handle differently
+      alert("No more items to load!");
     }
   }
-
-  function handleCreate() {}
 
   return (
     <div className={style.body}>
@@ -58,25 +96,26 @@ export default function Tracker(props) {
           </div>
         </div>
         <div className={style.result}>
-          {/* Set Goals Form */}
           {isGoalVisible && (
             <div className={style.formResult}>
-              <input type="text" placeholder="Goal" className={style.input} />
+              <input
+                type="text"
+                placeholder="Goal"
+                className={style.input}
+                value={goal}
+                onChange={(e) => setGoal(e.target.value)}
+              />
               <button type="submit" className={style.button} onClick={handleCreate}>
                 Create
               </button>
             </div>
           )}
 
-          {/* RoadMap */}
           {!isGoalVisible && (
             <div className={style.listResult}>
-              {/* Check if there's data to display */}
               {data.length > 0 ? (
                 <div>
-                  <div className="card">
-                  <p>Current Item: {data[currentIndex]}</p>
-                  </div>
+                  <p>Current Item: {data[currentIndex].title}</p>
                   <button onClick={handleCheck} className={style.button}>Check and Load Next</button>
                 </div>
               ) : (
