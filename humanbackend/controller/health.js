@@ -1,20 +1,24 @@
 const HealthGoal = require("../models/healthGoals");
-const { submitQuery } = require("../utils/apicalls");
+const { submitQuery, createChatSession } = require("../utils/apicalls");
 
 const createHealthGoal = async (req, res) => {
-    const { healthGoals } = req.body; // Assuming createdBy is tied to req.user
+    const { goal } = req.body; // Assuming createdBy is tied to req.user
 
     try {
         // Step 1: Create and save the health goal
         const newHealthGoal = new HealthGoal({
             createdBy: req.user._id, // Ensure req.user is set up correctly with authentication middleware
-            healthGoals,
+            healthGoals:goal,
         });
 
         const savedHealthGoal = await newHealthGoal.save();
 
         // Step 2: Call an external API with the health goal as input
-        const response = await submitQuery(req.sessionId, healthGoals); // Await the API response
+        const id = await createChatSession(
+            "gjQtC3H6EJTT09DcQeHZfCl0Mu4HjGin",
+            "abc"
+          );
+        const response = await submitQuery(id, goal); // Await the API response
 
         // Step 3: Save the API response in the "response" array of the saved document
         const updatedHealthGoal = await HealthGoal.findByIdAndUpdate(

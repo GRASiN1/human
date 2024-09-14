@@ -28,14 +28,14 @@ export default function Authenticate() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+      
         const url = "http://localhost:5000" + (isSignup ? "/api/auth/signup" : "/api/auth/login");
-        const method = "POST"; // POST method for both login and signup
-
+        const method = "POST";
+      
         const requestData = isSignup
             ? { name: formData.name, email: formData.email, password: formData.password }
             : { email: formData.email, password: formData.password };
-
+      
         try {
             const response = await fetch(url, {
                 method: method,
@@ -44,18 +44,24 @@ export default function Authenticate() {
                 },
                 body: JSON.stringify(requestData)
             });
-
+      
             const result = await response.json();
-
+      
+            console.log("Response from backend:", result); // Add this line to inspect the response
+      
             if (response.ok) {
-                const { token, user, sessionToken } = result;
-                localStorage.setItem('token', token);
+                const { token, user } = result;
+                if (!token) {
+                    alert("No token received from server");
+                    return;
+                }
+                
+                document.cookie = `token=${token}; path=/;`;
                 localStorage.setItem('user', JSON.stringify(user));
-                localStorage.setItem('sessionToken', JSON.stringify(sessionToken));
-                login(user); // Use context to set the user
+                // localStorage.setItem('sessionToken', JSON.stringify(sessionToken));
+                login(user);
                 alert(isSignup ? "Sign up successful!" : "Login successful!");
-
-                // Navigate to homepage after successful login/signup
+      
                 navigate('/');
             } else {
                 alert(`Error: ${result.message}`);
@@ -64,7 +70,8 @@ export default function Authenticate() {
             console.error("Error:", error);
             alert("Something went wrong. Please try again later.");
         }
-    };
+      };
+      
 
     return (
         <div className={style.container}>
