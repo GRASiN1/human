@@ -1,6 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import style from "./authenticate.module.css";
-import UserContext from "../../UserContext"; // Import UserContext
+import { useUser } from '../../UserContext'; // Import useUser
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export default function Authenticate() {
@@ -11,7 +11,7 @@ export default function Authenticate() {
         password: ""
     });
 
-    const { login } = useContext(UserContext); // Access the context
+    const { login } = useUser(); // Access the context correctly
     const navigate = useNavigate(); // Use navigate hook
 
     const handleSwitchChange = () => {
@@ -48,9 +48,10 @@ export default function Authenticate() {
             const result = await response.json();
 
             if (response.ok) {
-                const { token, user } = result;
+                const { token, user, sessionToken } = result;
                 localStorage.setItem('token', token);
                 localStorage.setItem('user', JSON.stringify(user));
+                localStorage.setItem('sessionToken', JSON.stringify(sessionToken));
                 login(user); // Use context to set the user
                 alert(isSignup ? "Sign up successful!" : "Login successful!");
 

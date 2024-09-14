@@ -6,20 +6,11 @@ import Loader from "../loader/loader";
 export default function Tracker(props) {
   const [isGoalVisible, setIsGoalVisible] = useState(true);
   const [goal, setGoal] = useState(""); // State to store the new goal
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([]); // State to store tasks
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch("http://localhost/api/roadmap");
-        const result = await response.json();
-        setData(result);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-    fetchData();
+    // Fetch initial data if needed
   }, []);
 
   async function handleCreate() {
@@ -29,13 +20,16 @@ export default function Tracker(props) {
     }
 
     try {
-      const response = await fetch("http://localhost/api/roadmap/goals", { // Replace with your endpoint
+      const response = await fetch("http://localhost:5000/api/health/", { // Replace with your endpoint
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${localStorage.getItem('token')}`, // Include token if required
         },
-        body: JSON.stringify({ goal })
+        body: JSON.stringify({
+          goal,
+          sessionToken: localStorage.getItem('sessionToken') // Include sessionToken in the request body
+        })
       });
 
       const result = await response.json();
@@ -43,8 +37,9 @@ export default function Tracker(props) {
       if (response.ok) {
         alert("Goal created successfully!");
         setGoal(""); // Clear input field
-        // Optionally, refetch or update your state to reflect the new goal
-        setData(prevData => [...prevData, result]);
+        
+        // Assuming `result.response` contains the tasks array
+        setData(result.response || []); // Store tasks locally
       } else {
         alert(`Error: ${result.message}`);
       }
@@ -71,7 +66,8 @@ export default function Tracker(props) {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'sessionToken': `${localStorage.getItem('sessionToken')}`,
           },
         });
         setCurrentIndex(currentIndex + 1);
@@ -82,6 +78,12 @@ export default function Tracker(props) {
       alert("No more items to load!");
     }
   }
+
+  // Convert the data object to an array of days
+  const days = Object.keys(data[0] || {}).map(dayKey => ({
+    day: dayKey,
+    tip: data[0][dayKey].tip
+  }));
 
   return (
     <div className={style.body}>
@@ -100,7 +102,7 @@ export default function Tracker(props) {
             <div className={style.formResult}>
               <input
                 type="text"
-                placeholder="Goal"
+                placeholder="Achieve this in X days"
                 className={style.input}
                 value={goal}
                 onChange={(e) => setGoal(e.target.value)}
@@ -113,9 +115,9 @@ export default function Tracker(props) {
 
           {!isGoalVisible && (
             <div className={style.listResult}>
-              {data.length > 0 ? (
+              {days.length > 0 ? (
                 <div>
-                  <p>Item: {data[currentIndex].title}</p>
+                  <p>{days[currentIndex].day}: {days[currentIndex].tip}</p>
                   <button onClick={handleCheck} className={style.button}>Check and Load Next</button>
                 </div>
               ) : (
