@@ -115,7 +115,7 @@ export default function Tracker(props) {
             <div className={style.listResult}>
               {data.length > 0 ? (
                 <div>
-                  <p>Current Item: {data[currentIndex].title}</p>
+                  <p>Item: {data[currentIndex].title}</p>
                   <button onClick={handleCheck} className={style.button}>Check and Load Next</button>
                 </div>
               ) : (
