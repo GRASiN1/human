@@ -4,6 +4,8 @@ const { createToken } = require("../utils/tokenManager");
 const { hash, compare } = require("bcryptjs");
 const { cookie } = require("express-validator");
 const path = require("path");
+const { createChatSession } = require("../utils/apicalls");
+const { setsid } = require("../services/auth");
 
 const handleUserSignup = async (req, res, next) => {
   try {
@@ -18,10 +20,19 @@ const handleUserSignup = async (req, res, next) => {
     await user.save();
 
     // create a new token
-    const token = createToken(user ,  "7d");
-    return res
-      .status(201)
-      .json({ message: "OK" ,token: token, user : user});
+
+
+
+    // session token
+    const id = await createChatSession(
+      "gjQtC3H6EJTT09DcQeHZfCl0Mu4HjGin",
+      "abc"
+    );
+    const sessionToken  = setsid(id);
+
+
+    const token = createToken(user, "7d");
+    return res.status(201).json({ message: "OK", token: token, user: user ,sessionToken:sessionToken});
   } catch (err) {
     return res.status(500).json({ error: "error", cause: err.message });
   }
@@ -39,12 +50,22 @@ const handleUserLogin = async (req, res, next) => {
     if (!isPasswordCorrect) {
       return res.status(403).send("Incorrect Password");
     }
-    const token = createToken(user ,"7d");
+    const token = createToken(user, "7d");
+
+    // session token
+    const id = await createChatSession(
+      "gjQtC3H6EJTT09DcQeHZfCl0Mu4HjGin",
+      "abc"
+    );
+    const sessionToken  = setsid(id);
+
 
     return res.status(200).json({
       message: "OK",
       token: token,
       user: user,
+      sessionToken:sessionToken,
+      
     });
   } catch (err) {
     return res.status(200).json({ message: "error", cause: err.message });

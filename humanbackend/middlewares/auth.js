@@ -1,12 +1,13 @@
-const { getUser } = require("../service/auth");
 
 
 // By this middleware we set  user id , email in req.user
 
+const { get } = require("../services/auth");
+
 async function checkAuth(req, res, next) {
 
-  const token = req.headers['autorization'].split("Bearer ")[1];
-  const sessionToken = req.headers['sessionToken'];
+  const token = req.headers['authorization'].split("Bearer ")[1];
+  const {sessionToken} = req.body;
 
   const id = get(sessionToken);
 

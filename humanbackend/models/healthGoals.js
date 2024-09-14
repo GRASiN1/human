@@ -4,22 +4,15 @@ const healthGoalSchema = new mongoose.Schema({
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
     },
     healthGoals: {
         type: String,
         required: true,
     },
     response: [{
-        message: {
-            type: Object,
-            required: true,
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now,
-        }
-    }],
+        type: Object, // Directly storing objects in the response array
+        required: true,
+      }],
    
 });
 
