@@ -32,12 +32,8 @@ app.use(cookieParser());
 // Route Middleware
 
 app.get("/", async (req, res) => {
-  const id = await createChatSession(
-    'gjQtC3H6EJTT09DcQeHZfCl0Mu4HjGin',
-    'abc'
-  )
   
-  res.json({ msg: "welcome", id: sessionToken  });
+  res.json({ msg: "welcome"});
 });
 
 app.use("/api/auth", authRoutes);
