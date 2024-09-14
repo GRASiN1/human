@@ -34,6 +34,7 @@ const createHealthGoal = async (req, res) => {
             msg: 'Health goal created and API response saved successfully',
             status: 'T',
             data: updatedHealthGoal,
+            
         });
 
     } catch (error) {
