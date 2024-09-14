@@ -6,7 +6,6 @@ const { get } = require("../services/auth");
 
 async function checkAuth(req, res, next) {
 
- HEAD
   const token = req.headers['authorization'].split("Bearer ")[1];
   // const {sessionToken} = req.body;
 
