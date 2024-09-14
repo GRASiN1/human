@@ -4,9 +4,12 @@ import style from "./homepage.module.css";
 import Card from "../card/card"
 import { useNavigate } from "react-router-dom"
 import Features from "../features/feature";
+import { useUser } from "../../UserContext";
 // eslint-disable-next-line
 
 export default function HomePage(props){
+    // eslint-disable-next-line
+    const [ user, setUser ] = useUser();
 
     const Navigation = useNavigate();
     function handleClick(url){
@@ -35,12 +38,12 @@ export default function HomePage(props){
 
     return(
         <div className={style.body}>
-            <Navbar user={null}/>
-            {props.user ? 
+            <Navbar/>
+            {user ? 
             <div className={style.content}>
-            <Card progress={100} title="ACADEMIC" onClick={() => handleClick("ACADEMIC")} />
-            <Card progress={100} title="SPORTS" onClick={() => handleClick("SPORTS")} />
-            <Card progress={100} title="MUSIC" onClick={() => handleClick("MUSIC")} />
+            <Card progress={100} title="ACADEMICS" onClick={() => handleClick("ACADEMIC")} />
+            <Card progress={100} title="FINANCE" onClick={() => handleClick("FINANCE")} />
+            <Card progress={100} title="HEALTH" onClick={() => handleClick("HEALTH")} />
             </div>
             :
             <div className={style.contentNoUser}>

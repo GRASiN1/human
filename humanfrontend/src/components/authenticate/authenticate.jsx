@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import style from "./authenticate.module.css";
+import UserContext from "../../UserContext"; // Import UserContext
+import { useContext } from "react";
 
 export default function Authenticate() {
     const [isSignup, setIsSignup] = useState(false);
@@ -8,6 +10,8 @@ export default function Authenticate() {
         email: "",
         password: ""
     });
+
+    const { login } = useContext(UserContext); // Access the context
 
     const handleSwitchChange = () => {
         setIsSignup(!isSignup);
@@ -24,8 +28,8 @@ export default function Authenticate() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const url = "http://localhost" + isSignup ? "/api/auth/signup" : "/api/auth/login"; // Replace with your backend URL
-        const method = isSignup ? "POST" : "POST"; // Typically, signup and login both use POST
+        const url = "http://localhost" + (isSignup ? "/api/auth/signup" : "/api/auth/login"); 
+        const method = isSignup ? "POST" : "POST"; 
 
         const requestData = isSignup
             ? { name: formData.name, email: formData.email, password: formData.password }
@@ -46,6 +50,7 @@ export default function Authenticate() {
                 const { token, user } = result;
                 localStorage.setItem('token', token);
                 localStorage.setItem('user', JSON.stringify(user));
+                login(user); // Use context to set the user
                 alert(isSignup ? "Sign up successful!" : "Login successful!");
             } else {
                 alert(`Error: ${result.message}`);

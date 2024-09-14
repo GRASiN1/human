@@ -47,7 +47,7 @@ export default function Tracker(props) {
 
   return (
     <div className={style.body}>
-      <Navbar user={null} />
+      <Navbar />
       <div className={style.content}>
         <div className={style.options}>
           <div className={style.form} onClick={handleSetGoals}>
