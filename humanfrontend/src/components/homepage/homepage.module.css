@@ -1,0 +1,19 @@
+.content{
+    background-color: inherit;
+    width: 100vw;
+    margin-right: 50px;
+    margin-top: 30px;
+    height: max-content;
+    display: flex;
+    justify-content: center;
+}
+
+.contentNoUser{
+    background-color: inherit;
+    width: 100vw;
+    margin-right: 50px;
+    margin-top: 10px;
+    height: max-content;
+    display: flex;
+    justify-content: center;
+}
