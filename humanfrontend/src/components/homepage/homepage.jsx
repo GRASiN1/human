@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../navbar/navbar";
 import style from "./homepage.module.css";
 import Card from "../card/card";
 import { useNavigate } from "react-router-dom";
 import Features from "../features/feature";
-import { useUser } from "../../UserContext";
+import { useUser } from "../../UserContext"; // Correct import
 
 export default function HomePage() {
+
     let features = [
         { image: '/images/5.jpg' },
         { image: 'images/1.jpg' },
@@ -15,15 +16,19 @@ export default function HomePage() {
         { image: 'images/4.jpg' },
     ];
 
-    const { user, setUser } = useUser();  // Using object destructuring
+    const { user } = useUser(); // Correct usage
     const navigate = useNavigate();
+    const [cards, setCards] = useState([]);
 
-    // Static cards data
-    const cards = [
-        { title: "ACADEMIC", progress: 80, logo: '/images/academic.png' },
-        { title: "FINANCE", progress: 60, logo: '/images/finance.png' },
-        { title: "HEALTH", progress: 50, logo: '/images/health.png' },
-    ];
+    useEffect(() => {
+        // Static card data
+        const staticCards = [
+            { title: 'ACADEMIC', progress: 50, logo: '/images/academicLogo.png' },
+            { title: 'FINANCE', progress: 75, logo: '/images/financeLogo.png' },
+            { title: 'HEALTH', progress: 90, logo: '/images/healthLogo.png' },
+        ];
+        setCards(staticCards);
+    }, []);
 
     function handleClick(url) {
         const formattedTitle = url.replace(/\s+/g, '-').toLowerCase();

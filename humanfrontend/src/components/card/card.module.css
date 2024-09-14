@@ -15,9 +15,12 @@
   
   .progressContainer {
     position: relative;
-    width: 120px;
-    height: 60px;
+    width: 150px;
+    height: 150px;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .progressCircle {
@@ -46,3 +49,6 @@
     text-align: center;
   }
   
+  .image{
+    width: 50px;
+  }
