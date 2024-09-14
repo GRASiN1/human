@@ -1,17 +1,21 @@
-import React from "react";
 import logo from "./logo.png";
 import style from "./navbar.module.css";
 import { Link } from "react-router-dom";
+import React from 'react';
+import { useUser } from "../../UserContext";
 
 export default function Navbar(props) {
+
+    const { user, logout } = useUser();
+
     return (
         <nav className={style.navbar}>
             <div className={style.brandLogo}>
                 <Link to="/"><img src={logo} alt="brandLogo" className={style.logo}/></Link>
             </div>
-            {props.user ? 
+            {user ? 
             <div className={style.userHandle}>
-                <Link to="/profile"><img src={props.user.profileImage} alt="profile of user" className={style.profileImage}/></Link>
+                <Link to="/profile"><img src={user.profileImage} alt="profile of user" className={style.profileImage} onClick={logout}/></Link>
             </div>
             :
             <div className={style.authenticate}>
