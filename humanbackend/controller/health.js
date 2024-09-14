@@ -21,11 +21,9 @@ const createHealthGoal = async (req, res) => {
             savedHealthGoal._id, // Find the saved goal by its ID
             {
                 $push: {
-                    response: {
-                        message: response, // Assuming API returns a JSON object or string
-                    }
+                  response: response, // Directly pushing the API response into the array
                 }
-            },
+              },
             { new: true } // Return the updated document after update
         );
 
