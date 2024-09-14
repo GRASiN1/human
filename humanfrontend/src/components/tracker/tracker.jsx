@@ -97,9 +97,9 @@ async function handleRoadMap() {
 
     if (response.ok) {
       // Transform response data dynamically
-      const tasks = Object.entries(result.data.response[0]).map(([day, data]) => ({
+      const tasks = Object.entries(result.data.response[0]).map(([day, {task}]) => ({
         day,
-        ...data // Spread operator to include all properties dynamically
+        task // Spread operator to include all properties dynamically
       }));
 
       setData(tasks); // Store tasks locally
@@ -168,8 +168,7 @@ async function handleRoadMap() {
                   {error && <p className={style.error}>{error}</p>} {/* Show error messages */}
                   {data.length > 0 && currentIndex < data.length ? (
                     <div className={style.card}>
-                      <p>Todays Task: {data[currentIndex].routine}</p>
-                      <p>Todays Task: {data[currentIndex].tip}</p>
+                      <p>Todays Task: {data[currentIndex].task}</p>
                       <button onClick={handleCheck} className={style.button}>Check</button>
                     </div>
                   ) : (

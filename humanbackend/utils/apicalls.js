@@ -32,7 +32,7 @@ async function submitQuery(sessionId,query) {
       `https://api.on-demand.io/chat/v1/sessions/${sessionId}/query`,
       {
         endpointId: 'predefined-openai-gpt4o',
-        query: `give me the output strictly in json object to acess each day no array for the query in format like start "{day1:{....},day2:{....},and so on } end and no other strings" ${query}`,
+        query: `give me the output strictly in json object to acess each day no array for the query in format like start "{day1:{ task:....},day2:{task:....},and so on } end and no other strings" ${query}`,
         pluginIds: ['plugin-1712327325', 'plugin-1713962163', 'plugin-1726230593'],
         responseMode: 'sync'
       },
