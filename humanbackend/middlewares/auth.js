@@ -1,7 +1,8 @@
-const { getUser } = require("../service/auth");
 
 
 // By this middleware we set  user id , email in req.user
+
+const { get } = require("../services/auth");
 
 async function checkAuth(req, res, next) {
 

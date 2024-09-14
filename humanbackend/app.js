@@ -16,6 +16,7 @@ const educationRoutes = require("./routes/education.js");
 const financeRoutes = require("./routes/finance.js");
 const { createChatSession, submitQuery } = require("./utils/apicalls.js");
 const { setsid, get } = require("./services/auth.js");
+const { checkAuth } = require('./middlewares/auth.js');
 
 // Initialize Express
 const app = express();
@@ -37,9 +38,9 @@ app.get("/", async (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
-app.use("/api/health", healthRoutes);
-app.use("/api/education", educationRoutes);
-app.use("/api/finance", financeRoutes);
+app.use("/api/health", checkAuth,healthRoutes);
+app.use("/api/education",checkAuth, educationRoutes);
+app.use("/api/finance",checkAuth,financeRoutes);
 
 // Start Server
 
