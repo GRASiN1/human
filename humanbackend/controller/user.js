@@ -13,32 +13,15 @@ const handleUserSignup = async (req, res, next) => {
     if (userExists) {
       return res.status(400).json({ error: "User already exists" });
     }
-
     const hashedPassword = await hash(password, 10);
     const user = new User({ name, email, password: hashedPassword });
     await user.save();
 
-    // create a token and store it in cookies
-
-    // first remove already existing cookie
-    res.clearCookie(process.env.COOKIE_NAME, {
-      httpOnly: true,
-      signed: true,
-    });
-
     // create a new token
-    const token = createToken(user._id.toString(), user.email, "7d");
-    const expires = new Date();
-    expires.setDate(expires.getDate() + 7);
-    res.cookie(process.env.COOKIE_NAME, token, {
-      expires,
-      httpOnly: true,
-      signed: true,
-      
-    });
+    const token = createToken(user ,  "7d");
     return res
       .status(201)
-      .json({ message: "OK", name: user.name, email: user.email ,token: token});
+      .json({ message: "OK" ,token: token, user : user});
   } catch (err) {
     return res.status(500).json({ error: "error", cause: err.message });
   }
@@ -56,29 +39,12 @@ const handleUserLogin = async (req, res, next) => {
     if (!isPasswordCorrect) {
       return res.status(403).send("Incorrect Password");
     }
-
-    // create token and store cookie
-    res.clearCookie(process.env.COOKIE_NAME, {
-      httpOnly: true,
-      signed: true,
-    });
-
-    const token = createToken(user._id.toString(), user.email, "7d");
-    
-    const expires = new Date();
-    expires.setDate(expires.getDate() + 7);
-    res.cookie(process.env.COOKIE_NAME, token, {
-      expires,
-      httpOnly: true,
-      signed: true,
-    });
+    const token = createToken(user ,"7d");
 
     return res.status(200).json({
       message: "OK",
-      name: user.name,
-      email: user.email,
       token: token,
-      cookie: process.env.COOKIE_NAME,
+      user: user,
     });
   } catch (err) {
     return res.status(200).json({ message: "error", cause: err.message });

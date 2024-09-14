@@ -15,7 +15,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<HomePage user={null}/>} />
+          <Route path="/" element={<HomePage/>} />
           <Route path="/authenticate" element={<Authenticate />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/tracker/:title"  element={<Tracker />} />

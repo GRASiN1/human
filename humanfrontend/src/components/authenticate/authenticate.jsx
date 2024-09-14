@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import style from "./authenticate.module.css";
 import UserContext from "../../UserContext"; // Import UserContext
-import { useContext } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 export default function Authenticate() {
     const [isSignup, setIsSignup] = useState(false);
@@ -12,6 +12,7 @@ export default function Authenticate() {
     });
 
     const { login } = useContext(UserContext); // Access the context
+    const navigate = useNavigate(); // Use navigate hook
 
     const handleSwitchChange = () => {
         setIsSignup(!isSignup);
@@ -28,8 +29,8 @@ export default function Authenticate() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const url = "http://localhost" + (isSignup ? "/api/auth/signup" : "/api/auth/login"); 
-        const method = isSignup ? "POST" : "POST"; 
+        const url = "http://localhost:5000" + (isSignup ? "/api/auth/signup" : "/api/auth/login");
+        const method = "POST"; // POST method for both login and signup
 
         const requestData = isSignup
             ? { name: formData.name, email: formData.email, password: formData.password }
@@ -52,6 +53,9 @@ export default function Authenticate() {
                 localStorage.setItem('user', JSON.stringify(user));
                 login(user); // Use context to set the user
                 alert(isSignup ? "Sign up successful!" : "Login successful!");
+
+                // Navigate to homepage after successful login/signup
+                navigate('/');
             } else {
                 alert(`Error: ${result.message}`);
             }

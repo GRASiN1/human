@@ -1,3 +1,4 @@
+const cors = require('cors');
 const express = require("express");
 const { connectToMongoDB } = require("./connect");
 const mongoose = require("mongoose");
@@ -20,7 +21,7 @@ const { setsid, get } = require("./services/auth.js");
 const app = express();
 
 // Middleware
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -48,7 +49,7 @@ app.use("/api/finance", financeRoutes);
 
 const PORT = process.env.PORT || 2000;
 
-connectToMongoDB("mongodb://127.0.0.1:27017/human")
+connectToMongoDB("mongodb://localhost:27017/human")
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);

@@ -15,7 +15,7 @@ export default function Navbar(props) {
             </div>
             {user ? 
             <div className={style.userHandle}>
-                <Link to="/profile"><img src={user.profileImage} alt="profile of user" className={style.profileImage} onClick={logout}/></Link>
+                <Link to="/profile"><img src={user.profileImage ? user.profileImage : "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg"} alt="profile of user" className={style.profileImage} onClick={logout}/></Link>
             </div>
             :
             <div className={style.authenticate}>
